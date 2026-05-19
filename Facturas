@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chequeo Facturas</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#eef1f4;
+  padding:15px;
+  color:#222;
+  transition:0.25s;
+}
+
+.container{
+  max-width:480px;
+  margin:auto;
+}
+
+/* DARK MODE */
+
+#darkModeToggle{
+  position:fixed;
+  top:14px;
+  right:14px;
+  width:44px;
+  height:44px;
+  border:none;
+  border-radius:999px;
+  background:#1f2937;
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+  z-index:999;
+  box-shadow:0 3px 10px rgba(0,0,0,0.25);
+  transition:0.25s;
+}
+
+#darkModeToggle:hover{
+  transform:scale(1.05);
+}
+
+/* CARD */
+
+.card{
+  background:white;
+  padding:18px;
+  border-radius:16px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
+  margin-bottom:20px;
+  transition:0.25s;
+}
+
+h1{
+  font-size:30px;
+  margin-bottom:18px;
+  text-align:center;
+  color:#2f5fb3;
+}
+
+.section-subtitle{
+  font-size:22px;
+  font-weight:bold;
+  margin-bottom:14px;
+  color:#384252;
+  padding-left:4px;
+}
+
+label{
+  display:block;
+  margin-top:14px;
+  margin-bottom:6px;
+  font-weight:bold;
+  font-size:14px;
+  color:#465063;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #cfd6df;
+  font-size:16px;
+  background:white;
+  color:#222;
+  transition:0.25s;
+}
+
+input:focus{
+  outline:none;
+  border-color:#2f5fb3;
+}
+
+/* SWITCH */
+
+.switch-container{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+.switch-btn{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-weight:bold;
+  font-size:15px;
+  cursor:pointer;
+  transition:0.2s;
+  background:#d5dce5;
+  color:#556070;
+}
+
+.switch-active{
+  background:#2f5fb3;
+  color:white;
+}
+
+/* BOTONES */
+
+.btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:bold;
+  margin-top:20px;
+  cursor:pointer;
+  transition:0.2s;
+  color:white;
+}
+
+.btn-primary{
+  background:#2f5fb3;
+}
+
+.btn-primary:hover{
+  background:#284f96;
+}
+
+/* PRODUCTOS */
+
+.product{
+  background:white;
+  border-radius:22px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 3px 12px rgba(0,0,0,0.05);
+  transition:0.25s;
+}
+
+.product-title{
+  font-size:22px;
+  font-weight:bold;
+  color:#263140;
+  margin-bottom:14px;
+}
+
+.product-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+  gap:10px;
+}
+
+.product-label{
+  color:#5c6675;
+  font-size:14px;
+}
+
+.product-value{
+  font-weight:bold;
+  font-size:17px;
+}
+
+.subtotal-box{
+  margin-top:12px;
+  background:#f4f6f9;
+  border-radius:16px;
+  padding:14px;
+  border:1px solid #d8dee7;
+}
+
+.subtotal-title{
+  font-size:13px;
+  color:#6b7482;
+  margin-bottom:6px;
+}
+
+.subtotal-value{
+  font-size:30px;
+  font-weight:bold;
+  color:#1f2937;
+}
+
+/* TOTALES */
+
+.total-card{
+  background:white;
+  border-radius:22px;
+  padding:18px;
+  margin-top:18px;
+  margin-bottom:26px;
+  box-shadow:0 3px 12px rgba(0,0,0,0.05);
+}
+
+.total-row{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+
+.total-label{
+  font-size:15px;
+  color:#556070;
+}
+
+.total-value{
+  font-size:18px;
+  font-weight:bold;
+}
+
+.total-final{
+  border-top:1px solid #dbe1e8;
+  padding-top:16px;
+  margin-top:8px;
+}
+
+.total-final .total-label{
+  font-size:18px;
+  font-weight:bold;
+}
+
+.total-final .total-value{
+  font-size:28px;
+  color:#2f5fb3;
+}
+
+/* RESULTADO */
+
+.result-box{
+  margin-top:18px;
+  border-radius:18px;
+  padding:18px;
+  border:2px solid transparent;
+}
+
+.result-green{
+  background:#edf8f1;
+  border-color:#3f9b63;
+}
+
+.result-yellow{
+  background:#fff8e9;
+  border-color:#d7a537;
+}
+
+.result-red{
+  background:#fff0f0;
+  border-color:#c55a5a;
+}
+
+.result-title{
+  font-size:22px;
+  font-weight:bold;
+  margin-bottom:16px;
+}
+
+.result-values{
+  margin-bottom:16px;
+}
+
+.result-line{
+  margin-bottom:14px;
+}
+
+.result-line-label{
+  font-size:14px;
+  color:#4b5563;
+  margin-bottom:4px;
+}
+
+.result-line-value{
+  font-size:34px;
+  font-weight:bold;
+  color:#111827;
+  line-height:1;
+}
+
+.result-message{
+  font-size:15px;
+  line-height:1.5;
+  color:#374151;
+}
+
+/* FOOTER */
+
+.footer-actions{
+  background:white;
+  border-radius:18px;
+  padding:16px;
+  margin-top:24px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+.footer-buttons{
+  display:flex;
+  gap:12px;
+}
+
+.footer-btn{
+  flex:1;
+  border:none;
+  border-radius:14px;
+  padding:14px;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  color:white;
+}
+
+.btn-clear{
+  background:#b84b4b;
+}
+
+.btn-whatsapp{
+  background:#2f9e5a;
+}
+
+/* DARK MODE */
+
+.dark-mode{
+  background:#111827;
+  color:#f3f4f6;
+}
+
+.dark-mode .card,
+.dark-mode .product,
+.dark-mode .total-card,
+.dark-mode .footer-actions{
+  background:#1f2937;
+}
+
+.dark-mode input{
+  background:#111827;
+  color:white;
+  border:1px solid #3c4b63;
+}
+
+.dark-mode .product-title,
+.dark-mode .subtotal-value,
+.dark-mode .total-value,
+.dark-mode .section-subtitle{
+  color:white;
+}
+
+.dark-mode .product-label,
+.dark-mode .subtotal-title,
+.dark-mode .total-label,
+.dark-mode label{
+  color:#c7d0dc;
+}
+
+.dark-mode .subtotal-box{
+  background:#273244;
+  border-color:#334155;
+}
+
+/* RESULTADOS DARK */
+
+.dark-mode .result-green{
+  background:#183425;
+  border-color:#3f9b63;
+}
+
+.dark-mode .result-yellow{
+  background:#3f3316;
+  border-color:#d7a537;
+}
+
+.dark-mode .result-red{
+  background:#3a1f1f;
+  border-color:#c55a5a;
+}
+
+.dark-mode .result-line-label,
+.dark-mode .result-message{
+  color:#e5e7eb;
+}
+
+.dark-mode .result-line-value,
+.dark-mode .result-title{
+  color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<button id="darkModeToggle">🌙</button>
+
+<div class="container">
+
+  <div class="card">
+
+    <h1>Chequeo Facturas</h1>
+
+    <label>Nombre producto</label>
+    <input type="text" id="nombre" placeholder="Opcional">
+
+    <label>¿Incluye IVA?</label>
+
+    <div class="switch-container">
+
+      <button
+        id="btnSi"
+        class="switch-btn switch-active"
+        onclick="cambiarIVA('si')">
+        SI
+      </button>
+
+      <button
+        id="btnNo"
+        class="switch-btn"
+        onclick="cambiarIVA('no')">
+        NO
+      </button>
+
+    </div>
+
+    <label id="labelPrecio">Precio bruto</label>
+    <input type="text" id="precio">
+
+    <label>Número de unidades</label>
+    <input type="number" id="unidades">
+
+    <button class="btn btn-primary" onclick="agregarProducto()">
+      Agregar producto
+    </button>
+
+  </div>
+
+  <div class="section-subtitle">
+    Factura según pedido
+  </div>
+
+  <div id="listaProductos"></div>
+
+  <div class="total-card">
+
+    <div class="total-row">
+      <div class="total-label">Neto</div>
+      <div class="total-value" id="totalNeto">$0</div>
+    </div>
+
+    <div class="total-row">
+      <div class="total-label">IVA (19%)</div>
+      <div class="total-value" id="totalIVA">$0</div>
+    </div>
+
+    <div class="total-row total-final">
+      <div class="total-label">Total bruto</div>
+      <div class="total-value" id="totalBruto">$0</div>
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <label>Total factura recibida</label>
+    <input type="text" id="facturaRecibida">
+
+    <label>Nota de crédito</label>
+    <input type="text" id="notaCredito">
+
+    <button class="btn btn-primary" onclick="evaluarFactura()">
+      Evaluar factura
+    </button>
+
+    <div id="resultadoFactura"></div>
+
+  </div>
+
+  <div class="footer-actions">
+
+    <div class="footer-buttons">
+
+      <button
+        class="footer-btn btn-clear"
+        onclick="borrarTodo()">
+
+        🗑️ Borrar todo
+
+      </button>
+
+      <button
+        class="footer-btn btn-whatsapp"
+        onclick="compartirWhatsApp()">
+
+        📲 WhatsApp
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+let productos = [];
+let ivaSeleccionado = "si";
+
+/* DARK MODE */
+
+const darkBtn =
+  document.getElementById("darkModeToggle");
+
+darkBtn.addEventListener("click", () => {
+
+  document.body.classList.toggle("dark-mode");
+
+  if(
+    document.body.classList.contains("dark-mode")
+  ){
+    darkBtn.innerHTML = "☀️";
+  } else {
+    darkBtn.innerHTML = "🌙";
+  }
+
+});
+
+/* IVA */
+
+function cambiarIVA(valor){
+
+  ivaSeleccionado = valor;
+
+  const btnSi = document.getElementById("btnSi");
+  const btnNo = document.getElementById("btnNo");
+
+  if(valor === "si"){
+
+    btnSi.classList.add("switch-active");
+    btnNo.classList.remove("switch-active");
+
+    document.getElementById("labelPrecio").innerText =
+      "Precio bruto";
+
+  } else {
+
+    btnNo.classList.add("switch-active");
+    btnSi.classList.remove("switch-active");
+
+    document.getElementById("labelPrecio").innerText =
+      "Precio neto";
+  }
+}
+
+function formatearCLP(numero){
+  return Number(numero).toLocaleString("es-CL");
+}
+
+function limpiarNumero(valor){
+
+  if(!valor) return 0;
+
+  return Number(
+    valor.toString().replace(/\./g, "")
+  );
+}
+
+function aplicarFormatoMoneda(id){
+
+  const input = document.getElementById(id);
+
+  input.addEventListener("input", function(e){
+
+    let valor = e.target.value
+      .replace(/\./g, "")
+      .replace(/\D/g, "");
+
+    if(valor === ""){
+      e.target.value = "";
+      return;
+    }
+
+    e.target.value =
+      Number(valor).toLocaleString("es-CL");
+  });
+}
+
+aplicarFormatoMoneda("precio");
+aplicarFormatoMoneda("facturaRecibida");
+aplicarFormatoMoneda("notaCredito");
+
+/* AGREGAR */
+
+function agregarProducto(){
+
+  let nombre =
+    document.getElementById("nombre").value.trim();
+
+  if(nombre === ""){
+    nombre = "Producto sin nombre";
+  }
+
+  const precioIngresado = limpiarNumero(
+    document.getElementById("precio").value
+  );
+
+  const unidades = parseInt(
+    document.getElementById("unidades").value
+  );
+
+  if(!precioIngresado || !unidades){
+    alert("Completa todos los campos");
+    return;
+  }
+
+  let precioBruto = precioIngresado;
+
+  if(ivaSeleccionado === "no"){
+    precioBruto = precioIngresado * 1.19;
+  }
+
+  const subtotal =
+    precioBruto * unidades;
+
+  productos.push({
+    nombre,
+    precioBruto,
+    unidades,
+    subtotal
+  });
+
+  limpiarFormulario();
+  renderProductos();
+}
+
+function renderProductos(){
+
+  const lista =
+    document.getElementById("listaProductos");
+
+  lista.innerHTML = "";
+
+  let totalBruto = 0;
+
+  productos.forEach(producto => {
+
+    totalBruto += producto.subtotal;
+
+    lista.innerHTML += `
+    <div class="product">
+
+      <div class="product-title">
+        ${producto.nombre}
+      </div>
+
+      <div class="product-row">
+        <div class="product-label">
+          Precio bruto
+        </div>
+
+        <div class="product-value">
+          $${formatearCLP(
+            Math.round(producto.precioBruto)
+          )}
+        </div>
+      </div>
+
+      <div class="product-row">
+        <div class="product-label">
+          Unidades
+        </div>
+
+        <div class="product-value">
+          ${producto.unidades}
+        </div>
+      </div>
+
+      <div class="subtotal-box">
+
+        <div class="subtotal-title">
+          Subtotal
+        </div>
+
+        <div class="subtotal-value">
+          $${formatearCLP(
+            Math.round(producto.subtotal)
+          )}
+        </div>
+
+      </div>
+
+    </div>
+    `;
+  });
+
+  const neto =
+    totalBruto / 1.19;
+
+  const iva =
+    totalBruto - neto;
+
+  document.getElementById("totalNeto").innerText =
+    "$" + formatearCLP(Math.round(neto));
+
+  document.getElementById("totalIVA").innerText =
+    "$" + formatearCLP(Math.round(iva));
+
+  document.getElementById("totalBruto").innerText =
+    "$" + formatearCLP(Math.round(totalBruto));
+}
+
+/* EVALUAR */
+
+function evaluarFactura(){
+
+  const factura = limpiarNumero(
+    document.getElementById("facturaRecibida").value
+  );
+
+  const notaCredito = limpiarNumero(
+    document.getElementById("notaCredito").value
+  );
+
+  const totalBruto =
+    productos.reduce(
+      (acc,p) => acc + p.subtotal,
+      0
+    );
+
+  const facturaReal =
+    factura - notaCredito;
+
+  const diferencia =
+    facturaReal - totalBruto;
+
+  const diferenciaAbs =
+    Math.abs(diferencia);
+
+  const porcentaje =
+    (diferenciaAbs / totalBruto) * 100;
+
+  const resultado =
+    document.getElementById("resultadoFactura");
+
+  let clase = "";
+  let titulo = "";
+  let mensaje = "";
+
+  /* MÁS BARATA DE LO ESPERADO */
+
+  if(
+    diferencia < 0 &&
+    (
+      porcentaje > 1 ||
+      diferenciaAbs > 8000
+    )
+  ){
+
+    clase = "result-yellow";
+
+    titulo = "⚠ Factura menor a lo pactado";
+
+    mensaje =
+      "La factura recibida es considerablemente menor al total pactado.";
+
+  }
+
+  /* CORRECTA */
+
+  else if(diferencia <= 0){
+
+    clase = "result-green";
+
+    titulo = "✓ Factura correcta";
+
+    mensaje =
+      "La factura recibida está igual o por debajo del total pactado.";
+
+  }
+
+  /* LEVEMENTE SUPERIOR */
+
+  else if(
+    porcentaje <= 0.6 &&
+    diferencia <= 8000
+  ){
+
+    clase = "result-yellow";
+
+    titulo = "⚠ Diferencia aceptable";
+
+    mensaje =
+      "La factura supera levemente el total pactado, pero está dentro del margen permitido.";
+
+  }
+
+  /* EXCESIVA */
+
+  else {
+
+    clase = "result-red";
+
+    titulo = "✕ Diferencia excesiva";
+
+    mensaje =
+      "La factura supera demasiado el total pactado.";
+  }
+
+  resultado.innerHTML = `
+  <div class="result-box ${clase}">
+
+    <div class="result-title">
+      ${titulo}
+    </div>
+
+    <div class="result-values">
+
+      <div class="result-line">
+
+        <div class="result-line-label">
+          Total pactado
+        </div>
+
+        <div class="result-line-value">
+          $${formatearCLP(Math.round(totalBruto))}
+        </div>
+
+      </div>
+
+      <div class="result-line">
+
+        <div class="result-line-label">
+          Factura real
+        </div>
+
+        <div class="result-line-value">
+          $${formatearCLP(Math.round(facturaReal))}
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="result-message">
+      ${mensaje}
+    </div>
+
+  </div>
+  `;
+}
+
+/* WHATSAPP */
+
+function compartirWhatsApp(){
+
+  if(productos.length === 0){
+    alert("No hay productos");
+    return;
+  }
+
+  let texto = "";
+
+  productos.forEach(producto => {
+
+    texto += `- *${producto.nombre}*\n`;
+
+    texto += `     $${formatearCLP(Math.round(producto.precioBruto))} x ${producto.unidades} =\n`;
+
+    texto += `     $${formatearCLP(Math.round(producto.subtotal))}\n\n`;
+
+  });
+
+  const totalBruto =
+    productos.reduce(
+      (acc,p) => acc + p.subtotal,
+      0
+    );
+
+  const factura =
+    limpiarNumero(
+      document.getElementById("facturaRecibida").value
+    );
+
+  const notaCredito =
+    limpiarNumero(
+      document.getElementById("notaCredito").value
+    );
+
+  texto += `TOTAL PACTADO: $${formatearCLP(Math.round(totalBruto))}\n`;
+
+  if(factura > 0){
+
+    texto += `Factura recibida: $${formatearCLP(factura)}\n`;
+  }
+
+  if(notaCredito > 0){
+
+    texto += `Nota de Crédito: $${formatearCLP(notaCredito)}\n`;
+  }
+
+  const url =
+    `https://wa.me/?text=${encodeURIComponent(texto)}`;
+
+  window.open(url, "_blank");
+}
+
+function borrarTodo(){
+
+  if(confirm("¿Borrar todos los productos?")){
+
+    productos = [];
+
+    renderProductos();
+
+    document.getElementById("resultadoFactura").innerHTML = "";
+  }
+}
+
+function limpiarFormulario(){
+
+  document.getElementById("nombre").value = "";
+  document.getElementById("precio").value = "";
+  document.getElementById("unidades").value = "";
+
+  cambiarIVA("si");
+}
+
+</script>
+
+</body>
+</html>
